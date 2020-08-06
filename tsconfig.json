@@ -1,0 +1,32 @@
+{
+  "compilerOptions" : {
+    "alwaysStrict": true,
+    "module" : "commonjs",
+    "moduleResolution": "node",
+    "target" : "es2017",
+    "sourceMap" : true,
+    "outDir": "./build",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "typeRoots": [
+    "node_modules/@types"
+  ],
+  "files": [
+    "run.ts",
+    "console.ts"
+  ],
+  "types": [
+    "mocha",
+    "node",
+    "chai",
+    "sinon",
+    "sinon-chai",
+    "discord.js",
+    "dotenv",
+    "reflect-metadata"
+  ],
+  "exclude" : [
+    "node_modules"
+  ]
+}

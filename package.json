@@ -1,0 +1,31 @@
+{
+  "name": "discord-quest-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/ts-node test/startup.ts && node_modules/.bin/mocha \"./test/*.test.ts\"",
+    "compile": "node_modules/typescript/bin/tsc --listEmittedFiles",
+    "migrate": "node_modules/db-migrate/bin/db-migrate",
+    "start": "node_modules/.bin/ts-node run.ts",
+    "nergal": "node_modules/.bin/ts-node console.ts"
+  },
+  "dependencies": {
+    "nergal": "0.1.0",
+    "typescript": "^3.9.7"
+  },
+  "author": "Alexey Zauzin <lehadnk@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.1",
+    "@types/node": "^14.0.27",
+    "@types/sinon": "^9.0.4",
+    "@types/sinon-chai": "^3.2.4",
+    "chai": "^4.2.0",
+    "mocha": "^8.1.0",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0",
+    "ts-node": "^8.10.2"
+  }
+}
