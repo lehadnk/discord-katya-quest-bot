@@ -5,3 +5,4 @@ dev-db.db3
 prod-db.db3
 build/*
 .env
+question-data.sql

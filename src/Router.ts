@@ -23,7 +23,7 @@ export default class Router implements IRouter {
                 return controller.handle(msg);
             } else {
                 let controller = new GameController();
-                return controller.handle(msg);
+                return controller.handle(msg, user);
             }
         }
     }
