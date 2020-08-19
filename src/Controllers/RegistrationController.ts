@@ -7,9 +7,11 @@ import ReactionCollector from "nergal/src/DTO/ReactionCollector";
 import UsersDAO from "../DAO/UsersDAO";
 import AppServiceContainer from "../AppServiceContainer";
 import User from "../Models/User";
+import GameService from "../Services/Game/GameService";
 
 export default class RegistrationController {
     private userData: Map<string, RegistrationData> = new Map<string, RegistrationData>();
+    private gameService: GameService = new GameService();
 
     public async handle(msg: DiscordMessage): Promise<DiscordControllerResponse>
     {
@@ -28,10 +30,16 @@ export default class RegistrationController {
                 usr.name = user.username;
                 usr.discord_user_id = user.id;
                 usr.discord_guild_id = guild.discord_id;
+                usr.level = 1;
 
                 await dao.save(usr);
 
                 user.send("Registration success message");
+
+                setTimeout(async () => {
+                    let question = await this.gameService.getCurrentQuestion(usr);
+                    user.send(question.text);
+                }, 5000);
             };
             return new DiscordControllerResponse("Select classhall msg", false, emojis, collector);
         }

@@ -6,7 +6,14 @@ import Question from "../../Models/Question";
 export default class GameService {
     questionsDao: QuestionsDAO = new QuestionsDAO(AppServiceContainer.db);
 
-    public async getNextQuestion(user: User): Promise<Question> {
-        return await this.questionsDao.get(1);
+    public async getCurrentQuestion(user: User): Promise<Question>
+    {
+        return await this.questionsDao.get(user.level);
+    }
+
+    public async checkAnswer(user: User, answer: string): Promise<boolean>
+    {
+        let question = await this.getCurrentQuestion(user);
+        return question.getAnswers().some((v) => v.toLowerCase() === answer.toLowerCase());
     }
 }

@@ -11,7 +11,7 @@ export default class Router implements IRouter {
     private usersDao: UsersDAO = new UsersDAO(AppServiceContainer.db);
 
     async route(msg: DiscordMessage): Promise<DiscordControllerResponse> {
-        if (msg.isAdmin && msg.isPrivate && msg.message.match(/!.*/)) {
+        if (msg.isAdmin && msg.isPrivate && msg.message.match(/\/.*/)) {
             let controller = new AdminController();
             return controller.handle(msg);
         }
