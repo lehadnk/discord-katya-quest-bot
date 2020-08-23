@@ -41,9 +41,9 @@ export default class RegistrationController {
                     user.send(question.text);
                 }, 5000);
             };
-            return new DiscordControllerResponse("Select classhall msg", false, emojis, collector);
+            return new DiscordControllerResponse("Select classhall msg", null, false, emojis, collector);
         }
 
-        return new DiscordControllerResponse("Please select a class", false);
+        return new DiscordControllerResponse("Please select a class", null, false);
     }
 }
