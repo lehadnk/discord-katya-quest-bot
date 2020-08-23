@@ -73,7 +73,7 @@ export default class RegistrationController {
         user.discord_guild_id = guild.discord_id;
         user.realm = realm;
         user.level = 1;
-        user.started_at = Date.now() / 1000;
+        user.started_at = Math.floor(Date.now() / 1000);
 
         await this.usersDao.save(user);
 
