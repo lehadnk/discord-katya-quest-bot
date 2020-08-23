@@ -26,7 +26,7 @@ export default class GameController {
 
         if (answerStatus.isCorrect) {
             if (answerStatus.message) {
-                await this.dmService.sendDm(user, answerStatus.message);
+                await this.dmService.sendDm(user.discord_user_id, answerStatus.message);
             }
 
             let question = await this.gameService.getCurrentQuestion(user);
