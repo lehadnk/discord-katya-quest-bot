@@ -6,4 +6,5 @@ export default class User {
     discord_guild_id: string;
     level: number;
     started_at: number;
+    avatar_url: string;
 }

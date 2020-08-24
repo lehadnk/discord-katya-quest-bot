@@ -38,3 +38,8 @@ guildList.forEach(g => guildsByEmojiMap.set(g.icon, g));
 
 export const guildByEmoji = guildsByEmojiMap;
 
+export const guildBroadcastChannels = [
+    '296690626244902913',
+    '297860534588538882',
+];
+

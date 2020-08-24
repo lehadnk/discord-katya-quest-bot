@@ -1,4 +1,3 @@
-import User from "../../Models/User";
 import AppServiceContainer from "../../AppServiceContainer";
 
 export default class DirectMessageService {

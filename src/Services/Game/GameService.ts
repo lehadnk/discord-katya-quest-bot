@@ -4,10 +4,15 @@ import AppServiceContainer from "../../AppServiceContainer";
 import Question from "../../Models/Question";
 import UsersDAO from "../../DAO/UsersDAO";
 import CheckAnswerResult from "../../DTO/CheckAnswerResult";
+import AnswerAttempt from "../../Models/AnswerAttempt";
+import AnswerAttemptsDAO from "../../DAO/AnswerAttemptsDAO";
+import NotificationService from "../NotificationService/NotificationService";
 
 export default class GameService {
     questionsDao: QuestionsDAO = new QuestionsDAO(AppServiceContainer.db);
     userDao: UsersDAO = new UsersDAO(AppServiceContainer.db);
+    answerAttemptDao: AnswerAttemptsDAO = new AnswerAttemptsDAO(AppServiceContainer.db);
+    notificationService: NotificationService = new NotificationService();
 
     public async getCurrentQuestion(user: User): Promise<Question>
     {
@@ -20,8 +25,23 @@ export default class GameService {
 
         let dto = new CheckAnswerResult();
         dto.isCorrect = question.getAnswers().some((v) => v.toLowerCase() === answer.toLowerCase());
+
+        let answerAttempt = new AnswerAttempt();
+        answerAttempt.user_id = user.id;
+        answerAttempt.given_at = Math.floor(Date.now() / 1000);
+        answerAttempt.level = user.level;
+        answerAttempt.is_correct = dto.isCorrect;
+        answerAttempt.answer = answer;
+        await this.answerAttemptDao.save(answerAttempt);
+
         if (dto.isCorrect) {
             dto.message = question.complete_text;
+
+            let answersCount = await this.answerAttemptDao.getAnswersCount(user.level);
+            if (answersCount < 4) {
+                await this.notificationService.broadcastLevelup(user, answersCount);
+            }
+
             await this.userDao.advanceLevel(user);
         }
 

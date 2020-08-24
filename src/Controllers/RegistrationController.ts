@@ -65,7 +65,7 @@ export default class RegistrationController {
         this.directMessageService.sendDm(discord_user_id, "Please provide your realm name.");
     }
 
-    private async register(guild: Guild, realm: string, faction: string, discord_user_id: string, username: string)
+    private async register(guild: Guild, realm: string, faction: string, discord_user_id: string, username: string, avatar_url: string)
     {
         let user = new User();
         user.name = username;
@@ -74,6 +74,7 @@ export default class RegistrationController {
         user.realm = realm;
         user.level = 1;
         user.started_at = Math.floor(Date.now() / 1000);
+        user.avatar_url = avatar_url;
 
         await this.usersDao.save(user);
 
@@ -99,7 +100,7 @@ export default class RegistrationController {
             return new DiscordControllerResponse("Please select a faction (орда/альянс):", null, false);
         }
 
-        await this.register(userData.guild, userData.realm, message, msg.authorId, msg.authorName);
+        await this.register(userData.guild, userData.realm, message, msg.authorId, msg.authorName, msg.authorAvatarUrl);
         this.userData.delete(msg.authorId);
         return null;
     }
