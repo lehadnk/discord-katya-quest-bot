@@ -1,5 +1,5 @@
-import {DiscordControllerResponse} from "nergal/src/DTO/DiscordControllerResponse";
-import {DiscordMessage} from "nergal/src/DTO/DiscordMessage";
+import {DiscordControllerResponse} from "nergal";
+import {DiscordMessage} from "nergal";
 import GameService from "../Services/Game/GameService";
 import User from "../Models/User";
 import UsersDAO from "../DAO/UsersDAO";

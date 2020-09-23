@@ -1,9 +1,9 @@
-import {DiscordControllerResponse} from "nergal/src/DTO/DiscordControllerResponse";
+import {DiscordControllerResponse} from "nergal";
 import RegistrationData, {RegistrationStage} from "../DTO/RegistrationData";
-import {DiscordMessage} from "nergal/src/DTO/DiscordMessage";
-import EmojiReference from "nergal/src/DTO/EmojiReference";
+import {DiscordMessage} from "nergal";
+import {EmojiReference} from "nergal";
 import Guild, {guildByEmoji, guildsById} from "../Config/Guilds";
-import ReactionCollector from "nergal/src/DTO/ReactionCollector";
+import {ReactionCollector} from "nergal";
 import UsersDAO from "../DAO/UsersDAO";
 import AppServiceContainer from "../AppServiceContainer";
 import User from "../Models/User";

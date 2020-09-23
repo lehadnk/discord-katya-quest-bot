@@ -1,6 +1,6 @@
-import AbstractDAO from 'nergal/src/DAO/AbstractDAO';
+import {AbstractDAO} from 'nergal';
 import User from "../Models/User";
-import { IDbAdapter } from 'nergal/src/Services/Db/IDbAdapter';
+import {IDbAdapter} from 'nergal';
 
 export default class UsersDAO extends AbstractDAO<User> {
     fields: string[] = ['id', 'name', 'discord_user_id', 'discord_guild_id', 'level', 'realm', 'started_at', 'avatar_url'];

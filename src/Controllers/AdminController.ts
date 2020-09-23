@@ -1,5 +1,5 @@
-import {DiscordControllerResponse} from "nergal/src/DTO/DiscordControllerResponse";
-import {DiscordMessage} from "nergal/src/DTO/DiscordMessage";
+import {DiscordControllerResponse} from "nergal";
+import {DiscordMessage} from "nergal";
 
 export default class AdminController {
     public async handle(msg: DiscordMessage): Promise<DiscordControllerResponse>

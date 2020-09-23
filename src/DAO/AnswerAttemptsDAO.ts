@@ -1,5 +1,5 @@
-import AbstractDAO from 'nergal/src/DAO/AbstractDAO';
-import { IDbAdapter } from 'nergal/src/Services/Db/IDbAdapter';
+import {AbstractDAO} from 'nergal';
+import {IDbAdapter} from 'nergal';
 import AnswerAttempt from "../Models/AnswerAttempt";
 
 export default class AnswerAttemptsDAO extends AbstractDAO<AnswerAttempt> {
