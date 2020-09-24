@@ -6,3 +6,4 @@ prod-db.db3
 build/*
 .env
 question-data.sql
+sync-db-to-prod.sh
