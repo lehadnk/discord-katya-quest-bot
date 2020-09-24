@@ -7,4 +7,5 @@ export default class User {
     level: number;
     started_at: number;
     avatar_url: string;
+    time_to_complete: number;
 }

@@ -2,13 +2,10 @@ import {DiscordControllerResponse} from "nergal";
 import {DiscordMessage} from "nergal";
 import GameService from "../Services/Game/GameService";
 import User from "../Models/User";
-import UsersDAO from "../DAO/UsersDAO";
-import AppServiceContainer from "../AppServiceContainer";
 import DirectMessageService from "../Services/DirectMessages/DirectMessageService";
 
 export default class GameController {
     private gameService = new GameService();
-    private userDao = new UsersDAO(AppServiceContainer.db);
     private dmService = new DirectMessageService();
 
     public async handle(msg: DiscordMessage, user: User): Promise<DiscordControllerResponse>
@@ -17,12 +14,21 @@ export default class GameController {
             return new DiscordControllerResponse("You finished the game");
         }
 
+        let question = await this.gameService.getCurrentQuestion(user);
         if (msg.message === '!вопрос') {
-            let question = await this.gameService.getCurrentQuestion(user);
             return new DiscordControllerResponse(question.text);
         }
 
-        let answerStatus = await this.gameService.checkAnswer(user, msg.message);
+        if (msg.message === '!подсказонька') {
+            let response = await this.gameService.doHint(user, question);
+            if (response === null) {
+                return new DiscordControllerResponse("Подсказки еще недоступны. Они станут доступны когда тройка первых игроков пройдут игру.");
+            }
+
+            return new DiscordControllerResponse(response);
+        }
+
+        let answerStatus = await this.gameService.checkAnswer(user, question, msg.message);
 
         if (answerStatus.isCorrect) {
             if (answerStatus.message) {
@@ -31,12 +37,13 @@ export default class GameController {
 
             let question = await this.gameService.getCurrentQuestion(user);
             if (!question) {
-                return null;
+                await this.gameService.completeGame(user);
+                return new DiscordControllerResponse("Поздравляю, вы прошли игру, и всякая такая хуйбола.");
             }
 
             return new DiscordControllerResponse(question.text);
         }
 
-        return new DiscordControllerResponse("Answer was not right");
+        return new DiscordControllerResponse("Ответ неправильный");
     }
 }

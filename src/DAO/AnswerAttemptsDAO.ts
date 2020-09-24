@@ -10,7 +10,7 @@ export default class AnswerAttemptsDAO extends AbstractDAO<AnswerAttempt> {
         super(db, () => new AnswerAttempt());
     }
 
-    public async getAnswersCount(level: number): Promise<number>
+    public async getCorrectAnswersCount(level: number): Promise<number>
     {
         return parseInt(await this.db.value("SELECT count(id) FROM " + this.table + " WHERE level = ?1 AND is_correct = 1", {
             1: level,

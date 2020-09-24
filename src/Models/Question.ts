@@ -12,4 +12,17 @@ export default class Question {
     {
         return JSON.parse(this.answers);
     }
+
+    public getHintsAmount(): number
+    {
+        let amount = 0;
+        if (this.hint) {
+            amount += 1;
+        }
+        if (this.hint2) {
+            amount += 1;
+        }
+
+        return amount;
+    }
 }

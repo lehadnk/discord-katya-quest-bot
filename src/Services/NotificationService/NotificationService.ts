@@ -22,11 +22,28 @@ export default class NotificationService {
         });
     }
 
-    public async broadcastLevelup(user: User, positon: number): Promise<void>
+    public async broadcastLevelup(user: User, rank: number): Promise<void>
     {
         let guild = guildsById.get(user.discord_guild_id);
-        let positionText = positon == 1 ? "первым" : positon == 2 ? "вторым" : "третьим";
+        let positionText = rank == 1 ? "первым" : rank == 2 ? "вторым" : "третьим";
         let text = "Игрок " + positionText + " решил вопрос номер " + user.level + "! Поздравляем!";
+        const embed = new MessageEmbed()
+            .setAuthor(user.name, user.avatar_url)
+            .setDescription(text)
+            .setColor(guild.classColor);
+
+        guildBroadcastChannels.forEach(channelId => {
+            AppServiceContainer.discordClient.channels.fetch(channelId).then(async (c: TextChannel) => {
+                await c.send({embed});
+            });
+        });
+    }
+
+    public async broadcastWin(user: User, rank: number): Promise<void>
+    {
+        let guild = guildsById.get(user.discord_guild_id);
+        let positionText = rank == 1 ? "первым" : rank == 2 ? "вторым" : "третьим";
+        let text = "Игрок " + positionText + " прошел игру! Поздравляем!";
         const embed = new MessageEmbed()
             .setAuthor(user.name, user.avatar_url)
             .setDescription(text)

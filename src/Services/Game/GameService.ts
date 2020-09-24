@@ -7,22 +7,24 @@ import CheckAnswerResult from "../../DTO/CheckAnswerResult";
 import AnswerAttempt from "../../Models/AnswerAttempt";
 import AnswerAttemptsDAO from "../../DAO/AnswerAttemptsDAO";
 import NotificationService from "../NotificationService/NotificationService";
+import {HintService} from "./HintService";
 
 export default class GameService {
+    questionsTotal: number = 11;
+
     questionsDao: QuestionsDAO = new QuestionsDAO(AppServiceContainer.db);
     userDao: UsersDAO = new UsersDAO(AppServiceContainer.db);
     answerAttemptDao: AnswerAttemptsDAO = new AnswerAttemptsDAO(AppServiceContainer.db);
     notificationService: NotificationService = new NotificationService();
+    hintService: HintService = new HintService();
 
     public async getCurrentQuestion(user: User): Promise<Question>
     {
         return await this.questionsDao.get(user.level);
     }
 
-    public async checkAnswer(user: User, answer: string): Promise<CheckAnswerResult>
+    public async checkAnswer(user: User, question: Question, answer: string): Promise<CheckAnswerResult>
     {
-        let question = await this.getCurrentQuestion(user);
-
         let dto = new CheckAnswerResult();
         dto.isCorrect = question.getAnswers().some((v) => v.toLowerCase() === answer.toLowerCase());
 
@@ -37,8 +39,8 @@ export default class GameService {
         if (dto.isCorrect) {
             dto.message = question.complete_text;
 
-            let answersCount = await this.answerAttemptDao.getAnswersCount(user.level);
-            if (answersCount < 4) {
+            let answersCount = await this.answerAttemptDao.getCorrectAnswersCount(user.level);
+            if (answersCount < 4 && user.level <= this.questionsTotal - 1) {
                 await this.notificationService.broadcastLevelup(user, answersCount);
             }
 
@@ -52,5 +54,33 @@ export default class GameService {
     {
         let question = await this.getCurrentQuestion(user);
         return !!question;
+    }
+
+    private async isGameHasThreeWinners(): Promise<boolean>
+    {
+        let answerCount = await this.answerAttemptDao.getCorrectAnswersCount(this.questionsTotal);
+        return answerCount >= 3;
+    }
+
+    async doHint(user: User, question: Question): Promise<string>
+    {
+        if (await this.isGameHasThreeWinners()) {
+            return null;
+        }
+
+        return this.hintService.doHint(user, question);
+    }
+
+    async completeGame(user: User): Promise<void>
+    {
+        let currentTime = Math.ceil(Date.now() / 1000);
+        user.time_to_complete = currentTime - user.started_at + await this.hintService.getTotalPenalty(user);
+        await this.userDao.save(user);
+
+        let playersCompletedGame = await this.answerAttemptDao.getCorrectAnswersCount(this.questionsTotal);
+
+        if (playersCompletedGame < 4) {
+            await this.notificationService.broadcastWin(user, playersCompletedGame);
+        }
     }
 }
