@@ -1,6 +1,6 @@
 import {DiscordControllerResponse, DiscordMessage, EmojiReference, ReactionCollector} from "nergal";
 import RegistrationData, {RegistrationStage} from "../DTO/RegistrationData";
-import Guild, {availableRealms, guildByEmoji, guildsById} from "../Config/Guilds";
+import {availableRealms, guildByEmoji, guildsById} from "../Config/Guilds";
 import UsersDAO from "../DAO/UsersDAO";
 import AppServiceContainer from "../AppServiceContainer";
 import User from "../Models/User";
@@ -30,7 +30,7 @@ export default class RegistrationController {
             case RegistrationStage.FACTION_SELECTION:
                 return this.sendFactionChoiceRequest(userData);
             case RegistrationStage.GUILD_SELECTION:
-                return this.sendGuildChoiceRequest();
+                return this.sendGuildChoiceRequest(userData);
         }
 
         return null;
@@ -44,7 +44,7 @@ export default class RegistrationController {
     private async selectCharacter(userData: RegistrationData, name: string)
     {
         userData.character_name = name;
-        return this.sendGuildChoiceRequest();
+        return this.sendGuildChoiceRequest(userData);
     }
 
     private async startRegistration(msg: DiscordMessage): Promise<DiscordControllerResponse>
@@ -59,7 +59,7 @@ export default class RegistrationController {
         return this.promptCharacterSelection();
     }
 
-    private async sendGuildChoiceRequest(): Promise<DiscordControllerResponse>
+    private async sendGuildChoiceRequest(userData: RegistrationData): Promise<DiscordControllerResponse>
     {
         let emojis: EmojiReference[] = [];
         guildsById.forEach(g => emojis.push(new EmojiReference('296690626244902913', g.icon)));
@@ -67,18 +67,21 @@ export default class RegistrationController {
         let collector = new ReactionCollector();
         collector.time = 150000;
         collector.lambda = async (reaction, user) => {
-            this.selectGuild(reaction.emoji.name, user.id);
+            this.selectGuild(reaction.emoji.name, user.id, userData);
         };
 
         return new DiscordControllerResponse("Пожалуйста, расскажи, откуда ты пришел: нажми на реакцию со значком своего классового оплота.", null, false, emojis, collector);
     }
 
-    private async selectGuild(emojiName: string, discord_user_id: string)
+    private async selectGuild(emojiName: string, discord_user_id: string, userData: RegistrationData)
     {
+        if (userData.stage !== RegistrationStage.GUILD_SELECTION) {
+            return null;
+        }
+
         let guild = guildByEmoji.get(emojiName);
         if (!guild) return;
 
-        let userData = this.userData.get(discord_user_id);
         userData.guild = guild;
         userData.stage = RegistrationStage.REALM_SELECTION;
 
@@ -142,6 +145,10 @@ export default class RegistrationController {
 
     private async selectFaction(userData: RegistrationData, faction: string): Promise<DiscordControllerResponse>
     {
+        if (userData.stage != RegistrationStage.FACTION_SELECTION) {
+            return null;
+        }
+
         await this.register(userData, faction);
         this.userData.delete(userData.discord_id);
         return null;
