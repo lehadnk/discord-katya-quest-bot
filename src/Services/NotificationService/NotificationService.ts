@@ -13,12 +13,21 @@ export default class NotificationService {
         });
     }
 
-    public async broadcast(msg: string)
+    public async broadcastToChannels(msg: string)
     {
         guildBroadcastChannels.forEach(channelId => {
             AppServiceContainer.discordClient.channels.fetch(channelId).then((c: TextChannel) => {
                 c.send(msg);
             });
+        });
+    }
+
+    public async broadcastToPlayers(discord_ids: string[], msg: string)
+    {
+        discord_ids.forEach(discord_user_id => {
+            AppServiceContainer.discordClient.users.fetch(discord_user_id).then(user => {
+                user.send(msg);
+            })
         });
     }
 
@@ -28,7 +37,7 @@ export default class NotificationService {
         let positionText = rank == 1 ? "первым" : rank == 2 ? "вторым" : "третьим";
         let text = "Игрок " + positionText + " решил вопрос номер " + user.level + "! Поздравляем!";
         const embed = new MessageEmbed()
-            .setAuthor(user.name, user.avatar_url)
+            .setAuthor(user.character_name, user.avatar_url)
             .setDescription(text)
             .setColor(guild.classColor);
 
@@ -45,7 +54,7 @@ export default class NotificationService {
         let positionText = rank == 1 ? "первым" : rank == 2 ? "вторым" : "третьим";
         let text = "Игрок " + positionText + " прошел игру! Поздравляем!";
         const embed = new MessageEmbed()
-            .setAuthor(user.name, user.avatar_url)
+            .setAuthor(user.character_name, user.avatar_url)
             .setDescription(text)
             .setColor(guild.classColor);
 

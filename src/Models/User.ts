@@ -8,4 +8,6 @@ export default class User {
     started_at: number;
     avatar_url: string;
     time_to_complete: number;
+    character_name: string;
+    faction: string;
 }

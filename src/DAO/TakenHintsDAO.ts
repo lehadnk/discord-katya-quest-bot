@@ -4,7 +4,7 @@ import TakenHint from "../Models/TakenHint";
 import User from "../Models/User";
 
 export default class TakenHintsDAO extends AbstractDAO<TakenHint> {
-    fields: string[] = ['id', 'user_id', 'level', 'amount', 'penalty'];
+    fields: string[] = ['id', 'user_id', 'level', 'amount', 'penalty', 'taken_at'];
     table: string = 'taken_hints';
 
     public constructor(db: IDbAdapter) {

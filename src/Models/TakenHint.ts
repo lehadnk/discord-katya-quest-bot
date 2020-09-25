@@ -4,4 +4,5 @@ export default class TakenHint {
     level: number;
     amount: number;
     penalty: number;
+    taken_at: number;
 }

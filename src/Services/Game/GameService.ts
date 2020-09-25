@@ -8,6 +8,7 @@ import AnswerAttempt from "../../Models/AnswerAttempt";
 import AnswerAttemptsDAO from "../../DAO/AnswerAttemptsDAO";
 import NotificationService from "../NotificationService/NotificationService";
 import {HintService} from "./HintService";
+import {DiscordControllerResponse} from "nergal";
 
 export default class GameService {
     questionsTotal: number = 11;
@@ -58,14 +59,15 @@ export default class GameService {
 
     private async isGameHasThreeWinners(): Promise<boolean>
     {
+        return true;
         let answerCount = await this.answerAttemptDao.getCorrectAnswersCount(this.questionsTotal);
         return answerCount >= 3;
     }
 
-    async doHint(user: User, question: Question): Promise<string>
+    async doHint(user: User, question: Question): Promise<DiscordControllerResponse>
     {
-        if (await this.isGameHasThreeWinners()) {
-            return null;
+        if (!await this.isGameHasThreeWinners()) {
+            return new DiscordControllerResponse("Подсказки еще недоступны. Они станут доступны когда тройка первых игроков пройдут игру.");
         }
 
         return this.hintService.doHint(user, question);
@@ -81,6 +83,12 @@ export default class GameService {
 
         if (playersCompletedGame < 4) {
             await this.notificationService.broadcastWin(user, playersCompletedGame);
+        }
+
+        if (playersCompletedGame === 3) {
+            let activePlayers = await this.userDao.getActive();
+            await this.notificationService.broadcastToPlayers(activePlayers.map(u => u.discord_user_id), "Три первых игрока прошли игру, а потому призовые места закончились. Но вы все еще можете посоревноваться в прохождении игры на скорость! Так же, если у вас слишком долго не получается решить квест, вы можете обратиться к нему за подсказкой командой `!подсказонька`. Помните, что взятие подсказки (или нескольких) на каждом этапе накинет вам штрафное время. Посмотреть список лидеров вы можете командой `!лидеры`. Удачи!");
+            await this.notificationService.broadcastToChannels("Три первых игрока прошли игру, а потому призовые места закончились. Но вы все еще можете посоревноваться в прохождении игры на скорость! Так же, если у вас слишком долго не получается решить квест, вы можете обратиться к нему за подсказкой командой `!подсказонька`. Помните, что взятие подсказки (или нескольких) на каждом этапе накинет вам штрафное время. Посмотреть список лидеров вы можете командой `!лидеры`. Удачи!");
         }
     }
 }

@@ -11,7 +11,7 @@ export default class GameController {
     public async handle(msg: DiscordMessage, user: User): Promise<DiscordControllerResponse>
     {
         if (!await this.gameService.isActivePlayer(user)) {
-            return new DiscordControllerResponse("You finished the game");
+            return new DiscordControllerResponse("Вы уже завершили игру. Спасибо за участие :heart:");
         }
 
         let question = await this.gameService.getCurrentQuestion(user);
@@ -20,12 +20,7 @@ export default class GameController {
         }
 
         if (msg.message === '!подсказонька') {
-            let response = await this.gameService.doHint(user, question);
-            if (response === null) {
-                return new DiscordControllerResponse("Подсказки еще недоступны. Они станут доступны когда тройка первых игроков пройдут игру.");
-            }
-
-            return new DiscordControllerResponse(response);
+            return await this.gameService.doHint(user, question);
         }
 
         let answerStatus = await this.gameService.checkAnswer(user, question, msg.message);
