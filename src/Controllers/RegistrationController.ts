@@ -69,6 +69,7 @@ export default class RegistrationController {
         collector.lambda = async (reaction, user) => {
             this.selectGuild(reaction.emoji.name, user.id, userData);
         };
+        userData.stage = RegistrationStage.GUILD_SELECTION;
 
         return new DiscordControllerResponse("Пожалуйста, расскажи, откуда ты пришел: нажми на реакцию со значком своего классового оплота.", null, false, emojis, collector);
     }
@@ -131,6 +132,8 @@ export default class RegistrationController {
         collector.lambda = async (reaction, user) => {
             this.selectFaction(userData, reaction.emoji.name === 'horde' ? 'Орда' : 'Альянс');
         };
+
+        userData.stage = RegistrationStage.FACTION_SELECTION;
 
         return new DiscordControllerResponse("Хорошо. Теперь, пожалуйста, выбери фракцию, за которую вы играешь.",
             null,
