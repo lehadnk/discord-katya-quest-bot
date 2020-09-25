@@ -20,7 +20,7 @@ export class HintService {
         let lastAnswerTime = lastAnswer ? lastAnswer.given_at : user.started_at;
         let currentTime = Math.ceil(Date.now() / 1000);
         if (currentTime - lastAnswerTime < 600) {
-            return new DiscordControllerResponse("Вы не можете взять подсказку в течении первых 10 минут после начала задания.");
+            return new DiscordControllerResponse("Вы не можете взять подсказку в течение первых 10 минут после начала задания.");
         }
 
         let hint = await this.takenHintsDao.getCurrent(user);
@@ -40,7 +40,7 @@ export class HintService {
         }
 
         if (currentTime - hint.taken_at < 600) {
-            return new DiscordControllerResponse("Вы не можете взять подсказку в течении 10 минут после прошлой подсказки.");
+            return new DiscordControllerResponse("Вы не можете взять подсказку в течение 10 минут после прошлой подсказки.");
         }
 
         hint.amount += 1;
