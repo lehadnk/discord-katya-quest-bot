@@ -30,13 +30,13 @@ export default class GameController {
                 await this.dmService.sendDm(user.discord_user_id, answerStatus.message);
             }
 
-            let question = await this.gameService.getCurrentQuestion(user);
-            if (!question) {
+            let nextQuestion = await this.gameService.getCurrentQuestion(user);
+            if (!nextQuestion) {
                 await this.gameService.completeGame(user);
-                return new DiscordControllerResponse("Поздравляю, вы прошли игру, и всякая такая хуйбола.");
+                return new DiscordControllerResponse(question.complete_text);
             }
 
-            return new DiscordControllerResponse(question.text);
+            return new DiscordControllerResponse(nextQuestion.text);
         }
 
         return new DiscordControllerResponse("Ответ неправильный");

@@ -16,6 +16,7 @@ export default class NotificationService {
     public async broadcastToChannels(msg: string)
     {
         guildBroadcastChannels.forEach((channelId) => {
+            console.log("Sending notification " + msg + " to channel " + channelId);
             AppServiceContainer.discordClient.channels.fetch(channelId).then((channel: TextChannel) => {
                 channel.send(msg);
             });
@@ -25,6 +26,7 @@ export default class NotificationService {
     public async broadcastToPlayers(discord_ids: string[], msg: string)
     {
         discord_ids.forEach(discord_user_id => {
+            console.log("Sending notification " + msg + " to player " + discord_user_id);
             AppServiceContainer.discordClient.users.fetch(discord_user_id).then(user => {
                 user.send(msg);
             })

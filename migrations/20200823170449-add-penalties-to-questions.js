@@ -15,7 +15,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = async function(db) {
-  await db.addColumn('questions', 'complete_text', 'int');
+  await db.addColumn('questions', 'complete_text', 'text');
   await db.addColumn('questions', 'hint2', 'text');
   await db.addColumn('questions', 'penalty', 'int');
   await db.addColumn('questions', 'penalty2', 'int');
