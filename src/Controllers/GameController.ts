@@ -33,7 +33,7 @@ export default class GameController {
             let nextQuestion = await this.gameService.getCurrentQuestion(user);
             if (!nextQuestion) {
                 await this.gameService.completeGame(user);
-                return new DiscordControllerResponse(question.complete_text);
+                return null;
             }
 
             return new DiscordControllerResponse(nextQuestion.text);
