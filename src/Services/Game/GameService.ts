@@ -76,6 +76,7 @@ export default class GameService {
     {
         let currentTime = Math.ceil(Date.now() / 1000);
         user.time_to_complete = currentTime - user.started_at + await this.hintService.getTotalPenalty(user);
+        console.log('Settings ttc to '+user.time_to_complete);
         await this.userDao.save(user);
 
         let playersCompletedGame = await this.answerAttemptDao.getCorrectAnswersCount(GameService.questionsTotal);

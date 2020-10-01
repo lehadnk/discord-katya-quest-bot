@@ -13,7 +13,7 @@ export default class NotificationService {
         });
     }
 
-    public async broadcastToChannels(msg: string)
+    public async broadcastToChannels(msg: any)
     {
         guildBroadcastChannels.forEach((channelId) => {
             console.log("Sending notification " + msg + " to channel " + channelId);
@@ -21,6 +21,8 @@ export default class NotificationService {
                 channel.send(msg).catch(e => {
                     console.error('Unable to send message to channel ' + channelId + ': missing permissions? ' + e);
                 });
+            }).catch(e => {
+                console.error('Unable to send message to channel ' + channelId + ': cannot fetch - missing permissions? ' + e);
             });
         });
     }
@@ -29,11 +31,14 @@ export default class NotificationService {
     {
         discord_ids.forEach(discord_user_id => {
             console.log("Sending notification " + msg + " to player " + discord_user_id);
-            AppServiceContainer.discordClient.users.fetch(discord_user_id).then(user => {
-                user.send(msg).catch(e => {
-                    console.error('Unable to send message to player ' + discord_user_id + ': missing permissions? ' + e);
+            AppServiceContainer.discordClient.users.fetch(discord_user_id)
+                .then(user => {
+                    user.send(msg).catch(e => {
+                        console.error('Unable to send message to player ' + discord_user_id + ': missing permissions? ' + e);
+                    });
+                }).catch(e => {
+                    console.error('Unable to send message to player ' + discord_user_id + ': cannot fetch - missing permissions? ' + e);
                 });
-            })
         });
     }
 
@@ -47,11 +52,7 @@ export default class NotificationService {
             .setDescription(text)
             .setColor(guild.classColor);
 
-        guildBroadcastChannels.forEach(channelId => {
-            AppServiceContainer.discordClient.channels.fetch(channelId).then(async (c: TextChannel) => {
-                await c.send({embed});
-            });
-        });
+        this.broadcastToChannels(embed);
     }
 
     public async broadcastWin(user: User, rank: number): Promise<void>
@@ -64,10 +65,6 @@ export default class NotificationService {
             .setDescription(text)
             .setColor(guild.classColor);
 
-        guildBroadcastChannels.forEach(channelId => {
-            AppServiceContainer.discordClient.channels.fetch(channelId).then(async (c: TextChannel) => {
-                await c.send({embed});
-            });
-        });
+        this.broadcastToChannels(embed);
     }
 }

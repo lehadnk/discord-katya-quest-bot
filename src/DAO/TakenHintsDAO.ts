@@ -23,8 +23,9 @@ export default class TakenHintsDAO extends AbstractDAO<TakenHint> {
 
     async getTotalPenalty(user_id: number): Promise<number>
     {
-        return parseInt(await this.db.value("SELECT sum(penalty) FROM taken_hints WHERE user_id = ?1", {
+        let penalty = parseInt(await this.db.value("SELECT sum(penalty) FROM taken_hints WHERE user_id = ?1", {
             1: user_id,
         }));
+        return penalty ? penalty : 0;
     }
 }
