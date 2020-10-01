@@ -31,7 +31,7 @@ export default class UsersDAO extends AbstractDAO<User> {
             "WHERE u.level = ?1\n" +
             "ORDER BY given_at ASC\n" +
             "LIMIT 3;", {
-            1: GameService.questionsTotal,
+            1: GameService.questionsTotal + 1,
         });
 
         return data.map(u => this.populate(u));
@@ -42,7 +42,7 @@ export default class UsersDAO extends AbstractDAO<User> {
         let data = await this.db.all("SELECT u.*, sum(th.amount) as hints\n" +
             "FROM users u\n" +
             "JOIN taken_hints th ON u.id = th.user_id\n" +
-            "WHERE u.level = 11\n" +
+            "WHERE u.level = 12\n" +
             "ORDER BY time_to_complete ASC\n" +
             "LIMIT 10;");
         return data.filter(u => !!u.id);
