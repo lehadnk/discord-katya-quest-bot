@@ -14,6 +14,6 @@ export default class ListGuilds extends AbstractCommand implements ICommand {
             console.log(user.name + ' (' + user.discord_user_id + ')');
         });
 
-        console.log(count + " users total.");
+        console.log(users.length + " users total.");
     }
 }

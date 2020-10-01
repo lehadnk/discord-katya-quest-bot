@@ -6,10 +6,12 @@ import UsersDAO from "./DAO/UsersDAO";
 import AppServiceContainer from "./AppServiceContainer";
 import RegistrationController from "./Controllers/RegistrationController";
 import GameController from "./Controllers/GameController";
+import PublicController from "./Controllers/PublicController";
 
 export default class Router implements IRouter {
     private usersDao: UsersDAO = new UsersDAO(AppServiceContainer.db);
     private registrationController = new RegistrationController();
+    private publicController = new PublicController();
 
     async route(msg: DiscordMessage): Promise<DiscordControllerResponse> {
         if (msg.isAdmin && msg.isPrivate && msg.message.match(/\/.*/)) {
@@ -26,5 +28,7 @@ export default class Router implements IRouter {
                 return controller.handle(msg, user);
             }
         }
+
+        return this.publicController.handle(msg);
     }
 }

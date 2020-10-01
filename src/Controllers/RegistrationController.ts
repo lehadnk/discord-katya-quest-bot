@@ -7,6 +7,7 @@ import User from "../Models/User";
 import GameService from "../Services/Game/GameService";
 import DirectMessageService from "../Services/DirectMessages/DirectMessageService";
 import NotificationService from "../Services/NotificationService/NotificationService";
+import onlyLetters from "../Helpers/String";
 
 export default class RegistrationController {
     private userData: Map<string, RegistrationData> = new Map<string, RegistrationData>();
@@ -116,7 +117,7 @@ export default class RegistrationController {
     private selectRealm(userData: RegistrationData, message: string): DiscordControllerResponse
     {
 
-        if (availableRealms.indexOf(message.toLowerCase()) === -1) {
+        if (availableRealms.indexOf(onlyLetters(message).toLowerCase()) === -1) {
             return new DiscordControllerResponse("К сожалению, данный сервер недоступен для игры. Пожалуйста, укажи любой другой, на котором у тебя есть альт, либо же создай пробного персонажа на Гордунни (альянс), либо Свежевателе Душ (орда). Его будет достаточно для прохождения квеста.");
         }
 

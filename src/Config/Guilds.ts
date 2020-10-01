@@ -46,7 +46,8 @@ export const guildBroadcastChannels = [
 
 export const availableRealms = [
     'гордунни',
-    'свежеватель душ',
+    'свежевательдуш',
     'азурегос',
     'kazzak',
+    'argentdawn',
 ];
