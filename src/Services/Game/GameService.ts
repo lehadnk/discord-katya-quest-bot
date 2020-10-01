@@ -59,7 +59,6 @@ export default class GameService {
 
     private async isGameHasThreeWinners(): Promise<boolean>
     {
-        return true;
         let answerCount = await this.answerAttemptDao.getCorrectAnswersCount(GameService.questionsTotal);
         return answerCount >= 3;
     }
