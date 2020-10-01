@@ -18,7 +18,9 @@ export default class NotificationService {
         guildBroadcastChannels.forEach((channelId) => {
             console.log("Sending notification " + msg + " to channel " + channelId);
             AppServiceContainer.discordClient.channels.fetch(channelId).then((channel: TextChannel) => {
-                channel.send(msg);
+                channel.send(msg).catch(e => {
+                    console.error('Unable to send message to channel ' + channelId + ': missing permissions? ' + e);
+                });
             });
         });
     }
@@ -28,7 +30,9 @@ export default class NotificationService {
         discord_ids.forEach(discord_user_id => {
             console.log("Sending notification " + msg + " to player " + discord_user_id);
             AppServiceContainer.discordClient.users.fetch(discord_user_id).then(user => {
-                user.send(msg);
+                user.send(msg).catch(e => {
+                    console.error('Unable to send message to player ' + discord_user_id + ': missing permissions? ' + e);
+                });
             })
         });
     }
