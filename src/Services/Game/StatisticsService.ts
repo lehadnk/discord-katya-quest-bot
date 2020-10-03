@@ -7,6 +7,11 @@ export class StatisticsService {
     public db: IDbAdapter = AppServiceContainer.db;
     private usersDao = new UsersDAO(AppServiceContainer.db);
 
+    private trailingZero(number: number): string
+    {
+        return number < 10 ? '0' + number : number.toString();
+    }
+
     public async getLeaderboard(): Promise<DiscordControllerResponse>
     {
         let winners = await this.usersDao.getWinners();
@@ -15,7 +20,7 @@ export class StatisticsService {
         let rank = 1;
         winners.forEach(u => {
             let date = new Date((u.started_at + u.time_to_complete) * 1000);
-            let dateStr = date.getDate() + '.' + date.getMonth() + '.' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
+            let dateStr = this.trailingZero(date.getDate()) + '.' + this.trailingZero(date.getMonth()) + '.' + date.getFullYear() + ' ' + this.trailingZero(date.getHours()) + ':' + this.trailingZero(date.getMinutes());
             result += '**' + rank + ':' + u.character_name + ' - ' + u.realm + '** (Завершил(а) ' + dateStr + ')\n';
             rank++;
         });
@@ -29,7 +34,7 @@ export class StatisticsService {
             let minutes = Math.floor((u.time_to_complete % 3600) / 60);
             let seconds = u.time_to_complete - hours * 3600 - minutes * 60;
 
-            let timeStr = hours + ':' + minutes + ':' + seconds;
+            let timeStr = this.trailingZero(hours) + ':' + this.trailingZero(minutes) + ':' + this.trailingZero(seconds);
             result += '**' + rank + ':' + u.character_name + ' - ' + u.realm + '** (' + timeStr + ', ' + u.hints + ' подсказок)\n';
             rank++;
         });

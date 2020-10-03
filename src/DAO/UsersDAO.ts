@@ -28,7 +28,7 @@ export default class UsersDAO extends AbstractDAO<User> {
         let data = await this.db.all("SELECT u.*\n" +
             "FROM answer_attempts aa\n" +
             "JOIN users u on aa.user_id = u.id\n" +
-            "WHERE u.level = ?1\n" +
+            "WHERE u.level = ?1 AND aa.level = 11 AND aa.is_correct = true\n" +
             "ORDER BY given_at ASC\n" +
             "LIMIT 3;", {
             1: GameService.questionsTotal + 1,
