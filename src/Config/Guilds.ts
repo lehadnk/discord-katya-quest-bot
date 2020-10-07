@@ -39,9 +39,9 @@ guildList.forEach(g => guildsByEmojiMap.set(g.icon, g));
 
 export const guildByEmoji = guildsByEmojiMap;
 
-export const guildBroadcastChannels = [
-    '211650891336515585', // Priests - #flood
-];
+import {config as dotenvInit} from "dotenv";
+dotenvInit();
+export const guildBroadcastChannels = JSON.parse(process.env.GUILD_BROADCAST_CHANNELS);
 
 export const availableRealms = [
     'гордунни',
