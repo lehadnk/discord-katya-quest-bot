@@ -10,6 +10,10 @@ export default class GameController {
 
     public async handle(msg: DiscordMessage, user: User): Promise<DiscordControllerResponse>
     {
+        if (!this.gameService.isGameStarted()) {
+            return new DiscordControllerResponse("Игра стартует 9 октября в 20-00");
+        }
+
         if (!await this.gameService.isActivePlayer(user)) {
             return new DiscordControllerResponse("Вы уже завершили игру. Спасибо за участие :heart:");
         }
