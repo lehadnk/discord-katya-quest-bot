@@ -13,13 +13,13 @@ export default class TestGameComplete extends AbstractCommand implements IComman
 
     async run(args: string[]) {
         let gameService = new GameService();
-        let dmService = new DirectMessageService();
         let usersDAO = new UsersDAO(AppServiceContainer.db);
         let users = await usersDAO.getAll();
 
-        users.forEach(async user => {
+        for (const user of users) {
             let question = await gameService.getCurrentQuestion(user);
-            await dmService.sendDm(user.discord_user_id, question.text);
-        });
+            await AppServiceContainer.messagingService.sendDM(user.discord_user_id, question.text);
+            console.log('Sent to '+user.discord_user_id);
+        }
     }
 }

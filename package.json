@@ -11,7 +11,7 @@
     "nergal": "node_modules/.bin/ts-node console.ts"
   },
   "dependencies": {
-    "nergal": "^0.5.3",
+    "nergal": "^0.6.0",
     "typescript": "^3.9.7"
   },
   "author": "Alexey Zauzin <lehadnk@gmail.com>",
