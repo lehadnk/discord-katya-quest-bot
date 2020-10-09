@@ -59,7 +59,7 @@ export default class UsersDAO extends AbstractDAO<User> {
     async getWithIncorrectStartDate() {
         let data = await this.db.all("SELECT *\n" +
             "FROM users\n" +
-            "WHERE started_at < 1602273600");
+            "WHERE started_at = 1602273600");
 
         return data.map(u => this.populate(u));
     }

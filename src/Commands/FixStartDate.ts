@@ -8,7 +8,7 @@ import TakenHintsDAO from "../DAO/TakenHintsDAO";
 import AppServiceContainer from "../AppServiceContainer";
 import DirectMessageService from "../Services/DirectMessages/DirectMessageService";
 
-export default class SetCorrectStartDate extends AbstractCommand implements ICommand {
+export default class FixStartDate extends AbstractCommand implements ICommand {
     name: string = 'fix-start-date';
 
     async run(args: string[]) {
@@ -16,7 +16,10 @@ export default class SetCorrectStartDate extends AbstractCommand implements ICom
         let users = await usersDAO.getWithIncorrectStartDate();
 
         for (const user of users) {
-            user.started_at = 1602273600;
+            user.started_at = 1602262800;
+            if (user.time_to_complete !== null) {
+                user.time_to_complete = user.time_to_complete + 10800;
+            }
             await usersDAO.save(user);
         }
     }
