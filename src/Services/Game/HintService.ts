@@ -18,7 +18,9 @@ export class HintService {
 
         let lastAnswer = await this.answerAttemptsDao.getLastCorrectAnswer(user);
         let lastAnswerTime = lastAnswer ? lastAnswer.given_at : user.started_at;
+
         let currentTime = Math.ceil(Date.now() / 1000);
+        console.log(currentTime, lastAnswerTime);
         if (currentTime - lastAnswerTime < 600) {
             return new DiscordControllerResponse("Вы не можете взять подсказку в течение первых 10 минут после начала задания.");
         }
