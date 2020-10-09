@@ -15,15 +15,15 @@ export default class NotificationService {
 
     public async broadcastToChannels(msg: any)
     {
-        guildBroadcastChannels.forEach((channelId) => {
-            AppServiceContainer.discordClient.channels.fetch(channelId).then((channel: TextChannel) => {
-                channel.send(msg).catch(e => {
+        for (const channelId of guildBroadcastChannels) {
+            await AppServiceContainer.discordClient.channels.fetch(channelId).then(async (channel: TextChannel) => {
+                await channel.send(msg).catch(e => {
                     console.error('Unable to send message to channel ' + channelId + ': missing permissions? ' + e);
                 });
             }).catch(e => {
                 console.error('Unable to send message to channel ' + channelId + ': cannot fetch - missing permissions? ' + e);
             });
-        });
+        }
     }
 
     public async broadcastToPlayers(discord_ids: string[], msg: string)

@@ -3,4 +3,4 @@ export {default as ListUsers} from './ListUsers';
 export {default as NotifyStart} from './NotifyStart';
 export {default as NotifyOthers} from './NotifyOthers';
 export {default as FixStartDate} from './FixStartDate';
-export {default as FindWinnder} from './FindWinners';
+export {default as AnnounceWinners} from './AnnounceWinners';
