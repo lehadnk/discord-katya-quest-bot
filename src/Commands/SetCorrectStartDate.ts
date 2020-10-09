@@ -13,7 +13,7 @@ export default class SetCorrectStartDate extends AbstractCommand implements ICom
 
     async run(args: string[]) {
         let usersDAO = new UsersDAO(AppServiceContainer.db);
-        let users = await usersDAO.getAll();
+        let users = await usersDAO.getWithIncorrectStartDate();
 
         for (const user of users) {
             user.started_at = 1602273600;
