@@ -74,9 +74,9 @@ export class StatisticsService {
         let users = ranks.map(u => u.discord_user_id);
         let rank = users.indexOf(discord_user_id) + 1;
 
-        let result = "Вы прошли игру **" + rank + "**\n";
+        let result = "Вы прошли игру **" + rank + "** по скорости\n";
         for(let l = 1; l <= 11; l++) {
-            result += l + " вопрос был решен " + await this.getQuestionRank(l, user.id) + '\n';
+            result += l + " вопрос был решен " + await this.getQuestionRank(l, user.id) + ' среди всех игроков\n';
         }
 
         let hintsRepository = new TakenHintsDAO(AppServiceContainer.db);
