@@ -81,6 +81,11 @@ export class StatisticsService {
 
         let hintsRepository = new TakenHintsDAO(AppServiceContainer.db);
         let hints = await hintsRepository.getAllByField('user_id', user.id.toString());
+        let hintsCnt = 0;
+        for(const h of hints) {
+            hintsCnt += h.amount;
+        }
+
         let penalty = await hintsRepository.getTotalPenalty(user.id);
         let date = new Date((user.started_at + user.time_to_complete) * 1000);
         let dateStr = this.trailingZero(date.getDate()) + '.' + this.trailingZero(date.getMonth()) + '.' + date.getFullYear() + ' ' + this.trailingZero(date.getHours()) + ':' + this.trailingZero(date.getMinutes());
@@ -90,7 +95,7 @@ export class StatisticsService {
         let seconds = user.time_to_complete - hours * 3600 - minutes * 60;
         let timeStr = this.trailingZero(hours) + ':' + this.trailingZero(minutes) + ':' + this.trailingZero(seconds);
 
-        result += '\nПрохождение было завершено '+ dateStr +' и заняло ' + timeStr + ', взято ' + hints.length + ' подсказок (' + penalty / 60 + ' минут штрафа)';
+        result += '\nПрохождение было завершено '+ dateStr +' и заняло ' + timeStr + ', взято ' + hintsCnt + ' подсказок (' + penalty / 60 + ' минут штрафа)';
 
         return new DiscordControllerResponse(result);
     }
