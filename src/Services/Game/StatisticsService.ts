@@ -21,7 +21,7 @@ export class StatisticsService {
         winners.forEach(u => {
             let date = new Date((u.started_at + u.time_to_complete) * 1000);
             let dateStr = this.trailingZero(date.getDate()) + '.' + this.trailingZero(date.getMonth()) + '.' + date.getFullYear() + ' ' + this.trailingZero(date.getHours()) + ':' + this.trailingZero(date.getMinutes());
-            result += '**' + rank + ':' + u.character_name + ' - ' + u.realm + '** (Завершил(а) ' + dateStr + ')\n';
+            result += '**' + rank + ': ' + u.character_name + ' - ' + u.realm + '** (Завершил(а) ' + dateStr + ')\n';
             rank++;
         });
 
@@ -35,7 +35,24 @@ export class StatisticsService {
             let seconds = u.time_to_complete - hours * 3600 - minutes * 60;
 
             let timeStr = this.trailingZero(hours) + ':' + this.trailingZero(minutes) + ':' + this.trailingZero(seconds);
-            result += '**' + rank + ':' + u.character_name + ' - ' + u.realm + '** (' + timeStr + ', ' + u.hints + ' подсказок)\n';
+            result += '**' + rank + ': ' + u.character_name + ' - ' + u.realm + '** (' + timeStr + ', ' + u.hints + ' подсказок)\n';
+            rank++;
+        });
+
+        return new DiscordControllerResponse(result);
+    }
+
+    public async getFirstResponses(question: number)
+    {
+        let leaders = await this.usersDao.getLeaders(question);
+
+        let result = "Первые ответившие на вопрос **"+question+"**:\n";
+
+        let rank = 1;
+        leaders.forEach(u => {
+            let date = new Date((u.given_at) * 1000);
+            let dateStr = this.trailingZero(date.getDate()) + '.' + this.trailingZero(date.getMonth()) + '.' + date.getFullYear() + ' ' + this.trailingZero(date.getHours()) + ':' + this.trailingZero(date.getMinutes());
+            result += '**' + rank + ': ' + u.character_name + ' - ' + u.realm + '** (Ответил(а) ' + dateStr + ')\n';
             rank++;
         });
 

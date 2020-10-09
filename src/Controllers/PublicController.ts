@@ -11,6 +11,20 @@ export default class PublicController {
             return this.statisticsService.getLeaderboard();
         }
 
+        if (msg.message.substr(0, 7) === '!первые') {
+            let chunks = msg.message.split(' ');
+            if (chunks.length !== 2) {
+                return;
+            }
+
+            let question = parseInt(chunks[1]);
+            if (question < 1 || question > 11) {
+                return null;
+            }
+
+            return this.statisticsService.getFirstResponses(question);
+        }
+
         return null;
     }
 }

@@ -37,9 +37,21 @@ export default class UsersDAO extends AbstractDAO<User> {
         return data.map(u => this.populate(u));
     }
 
+    public async getLeaders(question_id: number): Promise<any[]>
+    {
+        return await this.db.all("SELECT *\n" +
+            "FROM answer_attempts aa\n" +
+            "JOIN users u ON aa.user_id = u.id\n" +
+            "WHERE aa.level = ?1 AND is_correct = 1\n" +
+            "ORDER BY aa.given_at ASC\n" +
+            "LIMIT 20;", {
+            1: question_id
+        });
+    }
+
     public async getLeaderboard(): Promise<any[]>
     {
-        let data = await this.db.all("SELECT u.*, sum(th.amount) as hints\n" +
+        let data = await this.db.all("SELECT u.*, COALESCE(sum(th.amount), 0) as hints\n" +
             "FROM users u\n" +
             "LEFT JOIN taken_hints th ON u.id = th.user_id\n" +
             "WHERE u.level = 12\n" +
