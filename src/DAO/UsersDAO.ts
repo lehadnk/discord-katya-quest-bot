@@ -41,8 +41,9 @@ export default class UsersDAO extends AbstractDAO<User> {
     {
         let data = await this.db.all("SELECT u.*, sum(th.amount) as hints\n" +
             "FROM users u\n" +
-            "JOIN taken_hints th ON u.id = th.user_id\n" +
+            "LEFT JOIN taken_hints th ON u.id = th.user_id\n" +
             "WHERE u.level = 12\n" +
+            "GROUP BY u.id\n" +
             "ORDER BY time_to_complete ASC\n" +
             "LIMIT 10;");
         return data.filter(u => !!u.id);
