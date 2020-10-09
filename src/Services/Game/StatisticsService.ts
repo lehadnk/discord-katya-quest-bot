@@ -76,7 +76,8 @@ export class StatisticsService {
 
         let result = "Вы прошли игру **" + rank + "** по скорости\n";
         for(let l = 1; l <= 11; l++) {
-            result += l + " вопрос был решен " + await this.getQuestionRank(l, user.id) + ' среди всех игроков\n';
+            let playersCnt = await this.getCorrectAnswersCount(l);
+            result += l + " вопрос был решен " + await this.getQuestionRank(l, user.id) + ' среди всех '+ playersCnt +' решивших его игроков\n';
         }
 
         let hintsRepository = new TakenHintsDAO(AppServiceContainer.db);
@@ -110,5 +111,14 @@ export class StatisticsService {
         });
 
         return ranks.map(r => r.user_id).indexOf(user_id) + 1;
+    }
+
+    private async getCorrectAnswersCount(level: number)
+    {
+        return parseInt(await AppServiceContainer.db.value("SELECT count(id) as cnt\n" +
+            "FROM answer_attempts\n" +
+            "WHERE is_correct = 1 AND level = ?1", {
+            1: level,
+        }));
     }
 }
