@@ -65,7 +65,7 @@ export default class GameService {
 
     async doHint(user: User, question: Question): Promise<DiscordControllerResponse>
     {
-        if (await this.isGameHasThreeWinners()) {
+        if (!await this.isGameHasThreeWinners()) {
             return new DiscordControllerResponse("Подсказки еще недоступны. Они станут доступны, когда три первых игрока пройдут игру.");
         }
 
